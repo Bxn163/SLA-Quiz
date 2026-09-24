@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SLA Quiz – IT-System-Management</title>
+<style>
+:root{--bg:#0b1020;--card:#151c31;--card2:#1b2540;--text:#f7f8fc;--muted:#aeb7cc;--accent:#e20074;--accent2:#ff4b9a;--good:#28c76f;--bad:#ff5c5c;--border:#2b3550}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Inter,Segoe UI,Arial,sans-serif;background:radial-gradient(circle at top,#202b4a 0,#0b1020 55%);color:var(--text);display:flex;align-items:center;justify-content:center;padding:24px}.app{width:min(760px,100%)}.brand{font-size:13px;letter-spacing:.14em;color:#ff73b2;font-weight:800;margin-bottom:10px}.card{background:rgba(21,28,49,.96);border:1px solid var(--border);border-radius:24px;padding:34px;box-shadow:0 24px 70px rgba(0,0,0,.35)}h1{font-size:clamp(32px,6vw,52px);margin:0 0 12px;line-height:1.02}h2{font-size:clamp(23px,4vw,32px);margin:8px 0 22px;line-height:1.2}p{color:var(--muted);line-height:1.6}.btn{border:0;border-radius:14px;padding:15px 20px;font-size:16px;font-weight:800;cursor:pointer;color:white;background:linear-gradient(135deg,var(--accent),var(--accent2));transition:.18s transform,.18s opacity;width:100%;margin-top:12px}.btn:hover{transform:translateY(-1px)}.btn:disabled{opacity:.55;cursor:not-allowed;transform:none}.meta{display:flex;justify-content:space-between;color:var(--muted);font-size:14px;margin-bottom:12px}.bar{height:8px;background:#252e47;border-radius:99px;overflow:hidden;margin-bottom:30px}.fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .25s}.answers{display:grid;gap:12px}.answer{width:100%;text-align:left;padding:16px 18px;border-radius:14px;background:#11182b;color:var(--text);border:1px solid var(--border);cursor:pointer;font-size:16px;transition:.15s}.answer:hover{border-color:#687593;background:#18213a}.answer.correct{border-color:var(--good);background:rgba(40,199,111,.13)}.answer.wrong{border-color:var(--bad);background:rgba(255,92,92,.13)}.answer:disabled{cursor:default}.feedback{margin-top:16px;padding:14px 16px;border-radius:13px;background:var(--card2);color:var(--muted);line-height:1.5}.score{text-align:center;font-size:64px;font-weight:900;margin:12px 0;color:#ff73b2}.small{font-size:13px;color:var(--muted)}.hidden{display:none}@media(max-width:520px){.card{padding:24px;border-radius:18px}}
+</style>
+</head>
+<body>
+<main class="app">
+<div class="brand">IT-SYSTEM-MANAGEMENT • SLA</div>
+<section class="card" id="start">
+<h1>SLA Quiz</h1>
+<p>Wie gut kennst du Service-Level-Agreements?</p>
+<p>10 kurze Fragen auf Azubi-Niveau. Es geht um die Grundlagen, die man im IT-System-Management kennen sollte.</p>
+<button class="btn" id="startBtn">Quiz starten →</button>
+</section>
+
+<section class="card hidden" id="quiz">
+<div class="meta"><span id="counter">Frage 1 / 10</span><span id="points">0 Punkte</span></div>
+<div class="bar"><div class="fill" id="fill"></div></div>
+<h2 id="question"></h2>
+<div class="answers" id="answers"></div>
+<div class="feedback hidden" id="feedback"></div>
+<button class="btn hidden" id="nextBtn">Nächste Frage →</button>
+</section>
+
+<section class="card hidden" id="result">
+<div class="brand">ERGEBNIS</div>
+<h1>Quiz abgeschlossen</h1>
+<div class="score" id="score"></div>
+<p id="resultText"></p>
+<button class="btn" id="againBtn">Nochmal versuchen</button>
+</section>
+</main>
+
+<script>
+const questions=[
+{q:"Wofür steht die Abkürzung SLA?",a:["Service Level Agreement","System Login Access","Server Load Analysis","Software License Administration"],c:0,f:"SLA steht für Service Level Agreement – eine Vereinbarung über definierte Serviceleistungen und deren Qualität."},
+{q:"Was wird in einem SLA hauptsächlich festgelegt?",a:["Servicequalität und Leistungsumfang","Private Passwörter","Hardwarepreise aller Hersteller","Mitarbeiterurlaubspläne"],c:0,f:"Ein SLA legt fest, welche Leistungen ein Anbieter erbringt und welche Qualitäts- bzw. Servicebedingungen dafür gelten."},
+{q:"Was beschreibt die Verfügbarkeit eines IT-Services?",a:["Wie schnell ein PC startet","Wie lange ein Service nutzbar ist","Wie viele Mitarbeiter ihn betreuen","Wie teuer der Service ist"],c:1,f:"Die Verfügbarkeit beschreibt, in welchem Umfang ein IT-Service innerhalb eines definierten Zeitraums nutzbar ist."},
+{q:"Was bedeutet eine Verfügbarkeit von 99,9 %?",a:["Der Service ist immer verfügbar","Bis zu 0,1 % der vereinbarten Zeit können ausfallen","0,9 % der Zeit ist verfügbar","Der Service darf 9,9 % ausfallen"],c:1,f:"99,9 % Verfügbarkeit bedeutet rechnerisch, dass 0,1 % der betrachteten Zeit nicht verfügbar sein dürfen."},
+{q:"Was ist eine Reaktionszeit bei einer Störung?",a:["Zeit bis zur vollständigen Reparatur","Zeit bis zur ersten Bearbeitung der Störung","Zeit bis zur Rechnung","Zeit bis zum nächsten Backup"],c:1,f:"Die Reaktionszeit beschreibt, wie schnell der Dienstleister nach Eingang einer Störung reagiert bzw. mit der Bearbeitung beginnt."},
+{q:"Was beschreibt die Entstörzeit?",a:["Zeit bis zur Behebung einer Störung","Zeit bis zur Vertragsunterzeichnung","Zeit bis zur Bestellung","Zeit bis zum ersten Login"],c:0,f:"Die Entstörzeit bezeichnet den Zeitraum, innerhalb dessen eine Störung gemäß der vereinbarten Bedingungen behoben werden soll."},
+{q:"Warum werden Prioritäten für Störungen festgelegt?",a:["Damit alle Störungen gleich behandelt werden","Damit wichtige Störungen bevorzugt bearbeitet werden","Damit Tickets automatisch gelöscht werden","Damit weniger Benutzer Support erhalten"],c:1,f:"Prioritäten helfen dabei, kritische oder geschäftlich wichtige Störungen zuerst zu bearbeiten."},
+{q:"Was sollte ein gutes SLA möglichst eindeutig enthalten?",a:["Messbare Serviceziele","Nur allgemeine Werbeaussagen","Private Daten der Mitarbeiter","Die Lieblingssoftware des Kunden"],c:0,f:"Messbare Serviceziele machen überprüfbar, ob die vereinbarte Leistung tatsächlich eingehalten wurde."},
+{q:"Wer kann an einem SLA beteiligt sein?",a:["Nur der Endanwender","Nur die IT-Abteilung","Serviceanbieter und Kunde","Nur der Hersteller der Hardware"],c:2,f:"Ein SLA ist typischerweise eine Vereinbarung zwischen einem Serviceanbieter und einem Kunden bzw. Auftraggeber."},
+{q:"Was passiert typischerweise, wenn SLA-Ziele dauerhaft nicht eingehalten werden?",a:["Es gibt grundsätzlich keine Folgen","Die Leistung kann geprüft und vertragliche Folgen können greifen","Der Service wird automatisch kostenlos","Alle Tickets werden gelöscht"],c:1,f:"Bei SLA-Verstößen können je nach Vertrag Maßnahmen wie Eskalationen, Servicegutschriften oder andere vereinbarte Folgen vorgesehen sein."}
+];
+
+let current=0,score=0,answered=false;
+const $=id=>document.getElementById(id);
+function show(e){e.classList.remove("hidden")}function hide(e){e.classList.add("hidden")}
+function startQuiz(){current=0;score=0;hide($("start"));hide($("result"));show($("quiz"));render()}
+function render(){answered=false;const x=questions[current];$("counter").textContent=`Frage ${current+1} / ${questions.length}`;$("points").textContent=`${score} Punkte`;$("fill").style.width=`${(current/questions.length)*100}%`;$("question").textContent=x.q;$("answers").innerHTML="";hide($("feedback"));hide($("nextBtn"));x.a.forEach((t,i)=>{const b=document.createElement("button");b.className="answer";b.textContent=t;b.addEventListener("click",()=>answer(i,b));$("answers").appendChild(b)})}
+function answer(i,b){if(answered)return;answered=true;const x=questions[current];document.querySelectorAll(".answer").forEach((el,n)=>{el.disabled=true;if(n===x.c)el.classList.add("correct")});if(i===x.c){score++;b.classList.add("correct")}else b.classList.add("wrong");$("points").textContent=`${score} Punkte`;$("feedback").textContent=x.f;show($("feedback"));show($("nextBtn"));$("nextBtn").textContent=current===questions.length-1?"Ergebnis anzeigen →":"Nächste Frage →"}
+function next(){if(current<questions.length-1){current++;render()}else finish()}
+function finish(){hide($("quiz"));show($("result"));$("score").textContent=`${score} / ${questions.length}`;const p=score/questions.length*100;$("resultText").textContent=p===100?"10 von 10 – stark!":p>=80?"Sehr gut! Die SLA-Grundlagen sitzen.":p>=60?"Solide! Ein paar Grundlagen kannst du noch wiederholen.":"Schau dir die Grundlagen noch einmal an und versuche es erneut."}
+$("startBtn").addEventListener("click",startQuiz);$("nextBtn").addEventListener("click",next);$("againBtn").addEventListener("click",startQuiz);
+</script>
+</body>
+</html>
